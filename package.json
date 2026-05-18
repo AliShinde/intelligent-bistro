@@ -1,0 +1,16 @@
+{
+  "name": "viridian",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "frontend": "npm run start --workspace=frontend",
+    "backend": "npm run dev --workspace=backend"
+  },
+  "dependencies": {
+    "react-dom": "19.0.0",
+    "react-native-web": "^0.20.0"
+  }
+}

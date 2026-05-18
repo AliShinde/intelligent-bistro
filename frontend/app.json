@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "The Intelligent Bistro",
+    "slug": "viridian",
+    "version": "1.0.0",
+    "scheme": "viridian",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
