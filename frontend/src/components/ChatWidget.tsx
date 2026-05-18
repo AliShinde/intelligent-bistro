@@ -10,7 +10,7 @@ import type { CartItem } from "../types";
 interface ChatChoice { id: string; name: string; }
 interface PendingAction { action: "add" | "remove" | "update"; quantity?: number; }
 interface ActionStep {
-  action: "add" | "remove" | "update" | "none";
+  action: "add" | "remove" | "update" | "clear" | "none";
   item?: string;
   quantity?: number;
   choices?: ChatChoice[];
@@ -25,7 +25,7 @@ interface ChatMessage {
 }
 interface ChatResponse { steps: ActionStep[]; response: string }
 interface SingleAction {
-  action: "add" | "remove" | "update" | "none";
+  action: "add" | "remove" | "update" | "clear" | "none";
   item?: string;
   quantity?: number;
 }
@@ -59,6 +59,7 @@ export const ChatWidget = () => {
   const addItem = useCartStore((s) => s.addItem);
   const removeItem = useCartStore((s) => s.removeItem);
   const updateQuantity = useCartStore((s) => s.updateQuantity);
+  const clearCart = useCartStore((s) => s.clear);
 
   useEffect(() => {
     Animated.timing(translateX, { toValue: open ? 0 : panelWidth, duration: 280, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
@@ -67,7 +68,9 @@ export const ChatWidget = () => {
   useEffect(() => { if (open) scrollRef.current?.scrollToEnd({ animated: true }); }, [messages, open]);
 
   const applyAction = (a: SingleAction, cart: CartItem[]) => {
-    if (a.action === "none" || !a.item) return;
+    if (a.action === "none") return;
+    if (a.action === "clear") { clearCart(); return; }
+    if (!a.item) return;
     const menuItem = MENU_ITEMS.find((m) => m.id === a.item);
     if (!menuItem) return;
     const qty = a.quantity ?? 1;

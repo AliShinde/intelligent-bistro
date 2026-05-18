@@ -31,7 +31,7 @@ export interface PendingAction {
 }
 
 export interface ActionStep {
-  action: 'add' | 'remove' | 'update' | 'none';
+  action: 'add' | 'remove' | 'update' | 'clear' | 'none';
   item?: string;
   quantity?: number;
   choices?: ChatChoice[];

@@ -30,7 +30,8 @@ Available menu items (the "item" field must be one of these IDs):
 ${menuContext}
 
 Intent rules (CRITICAL — read first):
-- The user must EXPLICITLY ask to add/remove/update an item before you emit a cart action. Imperative verbs ("add", "get me", "I want", "give me", "put", "remove", "delete", "change", "update", "set", "make it") signal a cart action.
+- The user must EXPLICITLY ask to add/remove/update/clear an item before you emit a cart action. Imperative verbs ("add", "get me", "I want", "give me", "put", "remove", "delete", "change", "update", "set", "make it") signal a cart action.
+- If the user says "clear my cart", "empty the cart", "start over", "remove everything" → emit exactly ONE step with action="clear", item=null, quantity=null, userPhrase="".
 - Questions, info requests, descriptions, and chatter NEVER cause a cart change — even when they mention a menu item by name. Use action="none" for ALL of these.
   * Anything starting with "what", "what's", "what is", "tell me", "describe", "how much", "how many", "is the", "are the", "does the", "do you have", "can I", "is there", "what's in", "what comes with" → action="none".
   * Plain item names with no verb (e.g. "wings?", "the calamari") → ambiguous; prefer action="none" and ask the user to clarify in "response".
@@ -65,7 +66,7 @@ Matching rules per step:
 const STEP_SCHEMA = {
   type: 'object',
   properties: {
-    action: { type: 'string', enum: ['add', 'remove', 'update', 'none'] },
+    action: { type: 'string', enum: ['add', 'remove', 'update', 'clear', 'none'] },
     item: { type: ['string', 'null'] },
     quantity: { type: ['number', 'null'] },
     userPhrase: { type: 'string' },
@@ -78,10 +79,10 @@ export const parseMessage = async (input: ChatRequest): Promise<ChatResponse> =>
   const groq = getGroqClient();
   let completion;
   const startedAt = Date.now();
-  logger.info({ event: 'groq.request', model: 'openai/gpt-oss-20b' }, 'groq.request');
+  logger.info({ event: 'groq.request', model: 'openai/gpt-oss-120b' }, 'groq.request');
   try {
     completion = await groq.chat.completions.create({
-      model: 'openai/gpt-oss-20b',
+      model: 'openai/gpt-oss-120b',
       temperature: 0.1,
       response_format: {
         type: 'json_schema',
